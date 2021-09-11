@@ -1,0 +1,14 @@
+
+<% if Current.user %>
+<div class="btn-group float_btn" role="group">
+	<%= link_to "Manage Users", users_path, class: "btn btn-xlg btn-danger", style: "color: #fff"%>
+</div>
+<div class="btn-group float_btn" role="group">
+	<%= link_to "Manage Books", books_path, class: "btn btn-xlg btn-info", style: "color: #fff"%>
+</div>
+<% end %>
+
+<div class="btn-group float_btn" role="group">
+	<%= link_to "All Books", books_path, class: "btn btn-xlg btn-primary", style: "color: #fff"%>
+</div>
+
