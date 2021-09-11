@@ -1,0 +1,26 @@
+<div class="container">   
+  
+<%= form_for @book, url: {action: :update} do |f| %>   
+     
+   <h3>Add a Book</h3>   
+ <%= "<div>#{@book.errors.full_messages.first}</div>".html_safe if @book.errors.any? %>   
+    <p>   
+
+        
+     <div class="field">   
+            <label>Book Name</label>   
+            <%= f.text_field :book_name %>   
+     </div>   
+
+        
+     <div class="field">   
+            <label>Description</label>   
+            <%= f.text_field :desc %>   
+     </div>   
+  
+      </p>   
+   <div class="field">   
+      <%= link_to 'Back', { controller: 'books', action: 'index'} %>   
+      <%= f.submit 'Update Book' %>   
+    </div>   
+<% end %>   

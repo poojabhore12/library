@@ -1,0 +1,42 @@
+<br>
+<br>
+<div>
+     <div class="field" >   
+        <label><strong>Book Name:</strong></label>   
+          <%= @book.book_name %>   
+      </div>                     
+                       
+            <div class="field">   
+              <label><strong>Description:</strong></label>   
+              <%= @book.desc %>                 
+            </div>  
+            
+            <% if @book.is_borrowed && @current_user['role'] == "librarian"  %>
+            <div class="field">   
+                <label><strong>Issued Book:</strong></label>   
+                    <%= @issued_books.issue_date %>                            
+             </div> 
+            
+
+              <% elsif @book.return && @current_user['role'] == "librarian"%>
+                <div class="field">   
+                    <label><strong>Return Date:</strong></label>   
+                    <%= @issued_books.return_date %>                     
+                </div> 
+             <%end%> 
+
+                          
+  
+</div>       
+
+<% if @book.is_borrowed && @current_user['role'] == "student"%>
+  <%= link_to 'Return Book', return_path_url(@book) %> 
+<%end%>   
+
+<div>   
+   <%= link_to 'Back', { controller: 'books', action: 'index'} %>   
+</div>   
+
+
+
+    
