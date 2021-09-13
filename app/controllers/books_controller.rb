@@ -1,6 +1,5 @@
 class BooksController < ApplicationController
-  require 'date'
-  
+ 
  def index
     @current_user = User.find(session[:user_id])    
     @books = Book.all
@@ -14,7 +13,7 @@ class BooksController < ApplicationController
     @current_user = User.find(session[:user_id]) 
     @book = Book.find(params[:id])  
     @issued_books = IssuedBook.find_by(book_id: @book.id)
- 
+  
  end   
   
    
@@ -34,34 +33,26 @@ class BooksController < ApplicationController
    end   
  end 
 
-
  def borrow
   @book = Book.find(params[:id])
   @book.is_borrowed = true
-  @book.user_id = session[:user_id]
-  @issued_book = IssuedBook.find_by(book_id: @book.id)
-  logger.info("---------------#{@book.save!}--------------")
-  if @book.save!
-  logger.info(@issued_book.issue_date)
-  @issued_book.update(issue_date: DateTime.now)
-  logger.info(@issued_book.issue_date)
-  redirect_to @book, notice: 'Book is successfully borrowed.'
-  
-  
-  else
-  flash[:notice] = 'Book is already borrowed.'
-  render :show
-  end
-  
+    @book.user_id = session[:user_id]
+    @issued_book = IssuedBook.find_by(book_id: @book.id)
+
+    if @book.save!
+      @issued_book.update_columns(issue_date: DateTime.now)
+      redirect_to @book, notice: 'Book is successfully borrowed.'
+    else 
+      flash[:notice] = 'Book is already borrowed.'
+      render :show
+    end
   end
 
   def return
     @book=Book.find(params[:id])  
     @book.return = true
     @current_user = User.find(session[:user_id]) 
-    @issued_books = IssuedBook.find_by(book_id: @book.id)  
-  
-    
+    @issued_book = IssuedBook.find_by(book_id: @book.id)    
 
     if @book.is_borrowed && (@book.user_id != Current.user.id) 
       invalid_return = true
@@ -70,8 +61,8 @@ class BooksController < ApplicationController
     @book.is_borrowed=false
     @book.user_id = nil
     if !invalid_return && @book.save!
-      flash[:notice] = 'Book returened successfully.'
-      
+      @issued_book.update_columns(return_date: DateTime.now)
+      flash[:notice] = 'Book returened successfully.'      
       redirect_to @book
 
     else              
@@ -87,7 +78,7 @@ class BooksController < ApplicationController
   
    
  def update   
-   @book = Book.find(params[:id])   
+   @book = Book.find(params[:id])  
    if @book.update_attributes(book_params)   
      flash[:notice] = 'Book updated!'   
      redirect_to books_path   
